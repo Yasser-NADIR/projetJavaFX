@@ -7,6 +7,8 @@ package DAO;
 
 import Entities.Client;
 import Entities.Produit;
+import Entities.Vente;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,30 +17,31 @@ import java.util.List;
  */
 public class Program {
     public static void main(String arg[]){
-       IClientDAO clientDAO = new ClientDAOImpl();
-       System.out.println("------------------------getAll()");
-        List<Client> list = clientDAO.getAll();
-        for(Client c : list){
-            System.out.println(c);
-        }
-        System.out.println("------------------------getAll(nom)");
-        list = clientDAO.getAll("NADIR");
-        for(Client c : list){
-            System.out.println(c);
-        }
-        System.out.println("------------------------getOne(id)");
-        Client c = clientDAO.getOne(2);
-        System.out.println(c);
-        System.out.println("------------------------add(obj)");
-        c.setNom("nadir");
-        c.setPrenom("seraphina");
-//        clientDAO.add(c);
-        System.out.println("------------------------delete(id)");
-//        clientDAO.delete(3);
-        System.out.println("------------------------update(obj, id)");
-        c.setNom("nadir");
-        c.setPrenom("zainab");
-        clientDAO.update(c, c.getId());
-        
+       IVenteDAO venteDAO = new VenteDAOImpl();
+       Client client = new Client(1,  "nadir", "yasser", "0610065615", "qmdlkfj", "qmsdlkfjj", LocalDate.now());
+       Vente vente = new Vente(1, client, LocalDate.now());
+       System.out.println("------------------getAll()");
+       List<Vente> list = venteDAO.getAll();
+       for(Vente v: list){
+           System.out.println(v);
+       }
+       System.out.println("------------------getAllByClientId(idClient)");
+       list = venteDAO.getAllByClientId(6L);
+       for(Vente v: list){
+           System.out.println(v);
+       }
+       System.out.println("------------------getOne(id)");
+       vente = venteDAO.getOne(2);
+       System.out.println(vente);
+       System.out.println("------------------getOne(nomClient)");
+       vente = venteDAO.getOne("NADIR");
+       System.out.println(vente);
+       System.out.println("------------------add(vente)");
+//       venteDAO.add(v);
+       System.out.println("------------------delete(id)");
+//       venteDAO.delete(1);
+       System.out.println("------------------update(vente, id)");
+//       v.getClient().setId(6);
+//       venteDAO.update(v, 2);
     }
 }

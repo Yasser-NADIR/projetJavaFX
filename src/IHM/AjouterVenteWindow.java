@@ -5,12 +5,12 @@
  */
 package IHM;
 
-import Entities.Client;
 import Entities.LineCommande;
 import Entities.Produit;
 import Handler.AjouterVenteHandler;
 import java.time.LocalDate;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -107,6 +107,10 @@ public class AjouterVenteWindow {
     TableColumn<LineCommande, Long> qteDemandeTableColumn = new TableColumn<>("Quantité");
     TableColumn<LineCommande, LocalDate> dateCommandeTableColumn = new TableColumn<>("date");
     TableColumn<LineCommande, Double> totalCommandeTableColumn = new TableColumn("Total");
+    //dans le top de BorderPane
+    HBox topContainerHBox = new HBox(10);
+    Button nouveauVenteButton = new Button("Nouveau vente");
+    Button enregistrerVenteButton = new Button("Enregistrer vente");
 
     public Label getTotalPrixHorsTaxeCalculerLabel() {
         return totalPrixHorsTaxeCalculerLabel;
@@ -270,9 +274,21 @@ public class AjouterVenteWindow {
         listeProduitsVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         produitVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         linesCommandeVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
+        
+        //top de BorderPane
+        topContainerHBox.getStyleClass().add("main-carte");
+        
+        nouveauVenteButton.getStyleClass().add("btn");
+        enregistrerVenteButton.getStyleClass().add("btn");
+        
+        topContainerHBox.setAlignment(Pos.CENTER);
     }
 
     private void addWidgetToWindow() {
+        //le top de BorderPane
+        root.setTop(topContainerHBox);
+        topContainerHBox.getChildren().addAll(nouveauVenteButton, enregistrerVenteButton);
+        //le centere de BorderPane
         root.setCenter(body);
         body.getChildren().addAll(leftVBox, rightVBox);
         leftVBox.getChildren().addAll(clientVBox, listeProduitsVBox);
@@ -345,6 +361,13 @@ public class AjouterVenteWindow {
                 ajouterProduit.window.close();
                 handler.updateProduitTableView();
             });
+        });
+        
+        nouveauVenteButton.setOnAction(event->{
+            handler.nouveauVente();
+        });
+        enregistrerVenteButton.setOnAction(event->{
+            
         });
     }
     

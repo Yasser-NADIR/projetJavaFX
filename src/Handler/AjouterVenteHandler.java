@@ -135,4 +135,23 @@ public class AjouterVenteHandler {
         ajouterVente.getTaxeCalculerLabel().setText(String.valueOf(taxe));
         ajouterVente.getTTCCalculerLabel().setText(String.valueOf(ttc));
     }
+    
+    public void nouveauVente(){
+        
+        selectedClient = null;
+        selectedProduit = null;
+        
+        ajouterVente.getNomClientLabel().setText("");
+        ajouterVente.getPrenomClientLabel().setText("");
+        ajouterVente.getTeleClientLabel().setText("");
+        ajouterVente.getEmailClientLabel().setText("");
+        ajouterVente.getAdrClientLabel().setText("");
+        
+        ajouterVente.getRechercherProduitTextField().clear();
+        findProduit();
+        clearProduitFields();
+        ajouterVente.getListeLinesCommandeTableView().getItems().clear();
+        UpdateStatistiques();
+    }
+    
 }

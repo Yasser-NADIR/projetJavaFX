@@ -30,6 +30,14 @@ public class Vente {
         this.date = date;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     public List<LineCommande> getListLineCommande() {
         return listLineCommande;
     }
@@ -51,7 +59,7 @@ public class Vente {
 
     @Override
     public String toString() {
-        String d = "Vente{" + "id=" + id + ", listLineCommande : \n";
+        String d = "Vente{" + "id=" + id + ", client=" + client + ", listLineCommande : \n";
         for(LineCommande l: listLineCommande){
             d += l+"\n";
         }
