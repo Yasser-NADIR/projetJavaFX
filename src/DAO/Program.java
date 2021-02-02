@@ -5,6 +5,7 @@
  */
 package DAO;
 
+import Entities.Client;
 import Entities.Produit;
 import java.util.List;
 
@@ -14,28 +15,30 @@ import java.util.List;
  */
 public class Program {
     public static void main(String arg[]){
-        IProduitDAO produitDAO = new ProduitDAOImpl();
-        System.out.println("--------------------------getAll(String dis)");
-        List<Produit> list = produitDAO.getAll("Sumsang");
-        for(Produit p: list){
-            System.out.println(p);
+       IClientDAO clientDAO = new ClientDAOImpl();
+       System.out.println("------------------------getAll()");
+        List<Client> list = clientDAO.getAll();
+        for(Client c : list){
+            System.out.println(c);
         }
-        System.out.println("--------------------------getAll()");
-        list = produitDAO.getAll("");
-        for(Produit p: list){
-            System.out.println(p);
+        System.out.println("------------------------getAll(nom)");
+        list = clientDAO.getAll("NADIR");
+        for(Client c : list){
+            System.out.println(c);
         }
-        System.out.println("--------------------------getOne(long id)");
-        Produit p = produitDAO.getOne(5);
-        System.out.println(p);
-        System.out.println("--------------------------add(long id) DONE");
-        //p.setDesignation("test designation");
-        //p.setPrixAchat(123321);
-        //produitDAO.add(p);
-        System.out.println("--------------------------delete(long id DONE)");
-        //produitDAO.delete(9);
-        System.out.println("--------------------------update(Produit obj, long id) DONE");
-        //p.setDesignation(p.getDesignation()+" *");
-        //produitDAO.update(p, p.getId());
+        System.out.println("------------------------getOne(id)");
+        Client c = clientDAO.getOne(2);
+        System.out.println(c);
+        System.out.println("------------------------add(obj)");
+        c.setNom("nadir");
+        c.setPrenom("seraphina");
+//        clientDAO.add(c);
+        System.out.println("------------------------delete(id)");
+//        clientDAO.delete(3);
+        System.out.println("------------------------update(obj, id)");
+        c.setNom("nadir");
+        c.setPrenom("zainab");
+        clientDAO.update(c, c.getId());
+        
     }
 }

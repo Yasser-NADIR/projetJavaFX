@@ -25,10 +25,12 @@ public class Program extends Application{
     MenuBar menuBar = new MenuBar();
     //menus
     Menu produitMenu = new Menu("produit");
+    Menu clientMenu = new Menu("client");
     //items
     MenuItem ajouterProduitMenuItem = new MenuItem("ajouter");
     MenuItem rechercherProduitMenuItem = new MenuItem("rechercher");
     MenuItem listerProduitMenuItem = new MenuItem("lister");
+    MenuItem ajouterClientMenuItem = new MenuItem("ajouter");
     
     
     
@@ -46,8 +48,9 @@ public class Program extends Application{
     
     private void addMenuToWindow(){
         root.setTop(menuBar);
-        menuBar.getMenus().addAll(produitMenu);
+        menuBar.getMenus().addAll(produitMenu, clientMenu);
         produitMenu.getItems().addAll(ajouterProduitMenuItem, rechercherProduitMenuItem, listerProduitMenuItem);
+        clientMenu.getItems().addAll(ajouterClientMenuItem);
     }
     
     private void eventHandler(){
@@ -59,6 +62,9 @@ public class Program extends Application{
         });
         rechercherProduitMenuItem.setOnAction(event->{
             new RechercherProduitFormWindow();
+        });
+        ajouterClientMenuItem.setOnAction(event->{
+           new AjouterClientFormWindow();
         });
     }
     
