@@ -1,0 +1,31 @@
+.body{
+    -fx-background-color: #16a085;
+}
+.titreBox{
+    -fx-background-color: #34495e;
+    -fx-alignment: center;
+}
+.titreLabel{
+    -fx-font-size: 30px;
+    -fx-text-fill: white;
+}
+
+.inputLabel{
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-background-color: #1abc9c;
+}
+
+.comboBox{
+    -fx-pref-width: 150;
+}
+
+.btn{
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
+    -fx-background-color: #1abc9c;
+}
+.input{
+    -fx-font-size: 15px;
+    -fx-background-color: #1abc9c;
+}
