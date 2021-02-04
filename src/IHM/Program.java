@@ -31,6 +31,8 @@ public class Program extends Application{
     MenuItem rechercherProduitMenuItem = new MenuItem("rechercher");
     MenuItem listerProduitMenuItem = new MenuItem("lister");
     MenuItem ajouterClientMenuItem = new MenuItem("ajouter");
+    MenuItem rechercherClientMenuItem = new MenuItem("rechercher");
+    MenuItem listerClientMenuItem = new MenuItem("lister");
     
     
     
@@ -50,7 +52,7 @@ public class Program extends Application{
         root.setTop(menuBar);
         menuBar.getMenus().addAll(produitMenu, clientMenu);
         produitMenu.getItems().addAll(ajouterProduitMenuItem, rechercherProduitMenuItem, listerProduitMenuItem);
-        clientMenu.getItems().addAll(ajouterClientMenuItem);
+        clientMenu.getItems().addAll(ajouterClientMenuItem, rechercherClientMenuItem, listerClientMenuItem);
     }
     
     private void eventHandler(){
@@ -65,6 +67,12 @@ public class Program extends Application{
         });
         ajouterClientMenuItem.setOnAction(event->{
            new AjouterClientFormWindow();
+        });
+        rechercherClientMenuItem.setOnAction(event->{
+            new RechercherClientFormWindow();
+        });
+        listerClientMenuItem.setOnAction(event->{
+            new ListerClientWindow();
         });
     }
     

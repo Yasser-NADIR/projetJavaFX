@@ -27,10 +27,9 @@ public class AjouterClientHandler {
     }
     
     private boolean estNumeroTele(String num){
-        Pattern pattern = Pattern.compile("^0[6-7][0-9]{8}$||\\^+212[6-7][0-9]{8}$", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("^\\+212[6-7][0-9]{8}$|^0[6-7][0-9]{8}$");
         Matcher matcher = pattern.matcher(num);
         if(!matcher.find()){
-            System.out.println("not found");
             return false;
         }
         return true;
@@ -58,7 +57,13 @@ public class AjouterClientHandler {
                     ajouterClient.getAdrTextField().getText(),
                     ajouterClient.getDateDatePicker().getValue()
             );
-            //clientDAO.add(c);
+            clientDAO.add(c);
+            cleanFields();
+            Alert boiteDialog = new Alert(AlertType.INFORMATION);
+            boiteDialog.setTitle("Ajout de client");
+            boiteDialog.setHeaderText(null);
+            boiteDialog.setContentText("Vous avez ajouté un client");
+            boiteDialog.showAndWait();
         }else{
             Alert boiteDialog = new Alert(AlertType.ERROR);
             boiteDialog.setTitle("Erreur dans les champs");
@@ -66,5 +71,13 @@ public class AjouterClientHandler {
             boiteDialog.setContentText("un ou pleusieur champs sont incorrectes");
             boiteDialog.showAndWait();
         }
+    }
+    private void cleanFields(){
+        ajouterClient.getNomTextField().clear();
+        ajouterClient.getPrenomTextField().clear();
+        ajouterClient.getTeleTextField().clear();
+        ajouterClient.getEmailTextField().clear();
+        ajouterClient.getAdrTextField().clear();
+        ajouterClient.getDateDatePicker().setValue(null);
     }
 }
