@@ -101,6 +101,6 @@ public class Produit {
     
     @Override
     public String toString() {
-        return "{" + "designation=" + designation + ", prixAchat=" + prixAchat + ", prixVente=" + prixVente + ", categorie=" + categorie + ", qte=" + qte + ", date=" + date + '}';
+        return designation+"\t prix :"+prixAchat+"\t quantité :"+qte;
     }
 }
