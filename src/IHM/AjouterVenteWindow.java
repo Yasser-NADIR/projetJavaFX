@@ -5,8 +5,10 @@
  */
 package IHM;
 
+import Entities.Client;
 import Entities.LineCommande;
 import Entities.Produit;
+import Handler.AjouterVenteHandler;
 import java.time.LocalDate;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -14,11 +16,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -34,8 +36,10 @@ import javafx.stage.Stage;
  */
 public class AjouterVenteWindow {
     Stage window = new Stage();
-    HBox root = new HBox();
+    BorderPane root = new BorderPane();
+    HBox body = new HBox();
     Scene scene = new Scene(root);
+    AjouterVenteHandler handler = new AjouterVenteHandler(this);
     VBox leftVBox = new VBox();
     VBox rightVBox = new VBox();
     VBox clientVBox = new VBox();
@@ -44,18 +48,18 @@ public class AjouterVenteWindow {
     VBox linesCommandeVBox = new VBox();
     //la partie de client
     Label clientLabel = new Label("client : ");
-    ComboBox clientComboBox = new ComboBox();
+    ComboBox<Client> clientComboBox = new ComboBox();
     Button AjouterClientButton = new Button("Ajouter");
     Label nomLabel = new Label("Nom : ");
-    Label nomClientLabel = new Label("NAIDR");
+    Label nomClientLabel = new Label("");
     Label prenomLabel = new Label("Prenom : ");
-    Label prenomClientLabel = new Label("Yasser");
+    Label prenomClientLabel = new Label("");
     Label teleLabel = new Label("Téléphone : ");
-    Label teleClientLabel = new Label("0610065615");
+    Label teleClientLabel = new Label("");
     Label emailLabel = new Label("Email : ");
-    Label emailClientLabel = new Label("yassernaidr761@gmail.com");
+    Label emailClientLabel = new Label("");
     Label adrLabel = new Label("Adresse : ");
-    Label adrClientLabel = new Label("sidi momen casa");
+    Label adrClientLabel = new Label("");
     Label dateLabel = new Label("Date : ");
     DatePicker dateDatePicker = new DatePicker();
     //la partie de liste des produits
@@ -71,18 +75,20 @@ public class AjouterVenteWindow {
     TableColumn totalTableColumn = new TableColumn("total");
     //la partie de produit
     Label designationLabel = new Label("Designation :");
-    Label designationProduitLabel = new Label("Iphone X");
+    Label designationProduitLabel = new Label("");
     Label prixAchatLabel = new Label("Prix achat:");
-    Label prixAchatProduitLabel = new Label("12000");
+    Label prixAchatProduitLabel = new Label("");
     Label categorieLabel = new Label("Categorie : ");
-    Label categorieProduitLabel = new Label("smart phone");
+    Label categorieProduitLabel = new Label("");
     Label qteLabel = new Label("Quantité en stock : ");
-    Label qteProduitLabel = new Label("10");
+    Label qteProduitLabel = new Label("");
     Label qteDemandeLabel = new Label("Quantité demandé : ");
     TextField qteDemandeTextField = new TextField();
     Label prixVenteLabel = new Label("Prix vente : ");
     TextField prixVenteTextField = new TextField();
-    Button ajouterProduitALineCommandeButton = new Button("ajouter");
+    Button ajouterProduitALineCommandeButton = new Button("ajouter au line");
+    Button ajouterProduitButton = new Button("ajouter Produit");
+    
     //line de commande
     //les statistiques
     VBox infoGlobalVBox = new VBox();
@@ -103,13 +109,62 @@ public class AjouterVenteWindow {
     TableColumn<LineCommande, LocalDate> dateCommandeTableColumn = new TableColumn<>("date");
     TableColumn totalCommandeTableColumn = new TableColumn("Total");
 
-    
+    public Label getDesignationProduitLabel() {
+        return designationProduitLabel;
+    }
+
+    public Label getPrixAchatProduitLabel() {
+        return prixAchatProduitLabel;
+    }
+
+    public Label getCategorieProduitLabel() {
+        return categorieProduitLabel;
+    }
+
+    public Label getQteProduitLabel() {
+        return qteProduitLabel;
+    }
+
+    public TextField getRechercherProduitTextField() {
+        return rechercherProduitTextField;
+    }
+
+    public TableView<Produit> getListeProduitsTableView() {
+        return listeProduitsTableView;
+    }
+
+    public ComboBox getClientComboBox() {
+        return clientComboBox;
+    }
+
+    public Label getNomClientLabel() {
+        return nomClientLabel;
+    }
+
+    public Label getPrenomClientLabel() {
+        return prenomClientLabel;
+    }
+
+    public Label getTeleClientLabel() {
+        return teleClientLabel;
+    }
+
+    public Label getEmailClientLabel() {
+        return emailClientLabel;
+    }
+
+    public Label getAdrClientLabel() {
+        return adrClientLabel;
+    }
+
     
     public AjouterVenteWindow() {
         setupWindow();
         addWidgetToWindow();
         setStyleSheet();
         eventeHanlder();
+        handler.setClientsToComboBox();
+        handler.updateProduitTableView();
         window.show();
     }
 
@@ -120,11 +175,12 @@ public class AjouterVenteWindow {
         window.setMinHeight(400);
         window.setScene(scene);
         window.initModality(Modality.APPLICATION_MODAL);
+        window.setMaximized(true);
     }
 
     private void setStyleSheet() {
         scene.getStylesheets().add("css/new.css");
-        root.getStyleClass().add("body");
+        body.getStyleClass().add("body");
         clientVBox.getStyleClass().add("main-carte");
         listeProduitsVBox.getStyleClass().add("main-carte");
         produitVBox.getStyleClass().add("main-carte");
@@ -155,6 +211,7 @@ public class AjouterVenteWindow {
         qteDemandeLabel.getStyleClass().add("lbl");
         prixVenteLabel.getStyleClass().add("lbl");
         ajouterProduitALineCommandeButton.getStyleClass().addAll("btn", "lbl");
+        ajouterProduitButton.getStyleClass().addAll("btn", "lbl");
         
         totalPrixHorsTaxeLabel.getStyleClass().add("lbl");
         totalPrixHorsCalculerTaxeLabel.getStyleClass().add("lbl");
@@ -176,8 +233,8 @@ public class AjouterVenteWindow {
         VBox.setMargin(listeLinesCommandeTableView, new Insets(10, 0, 0, 0));
         HBox.setMargin(rechercherProduitTextField, new Insets(0, 5, 0, 5));
         
-        clientVBox.setMaxHeight(100);
-        produitVBox.setMaxHeight(100);
+        clientVBox.setMaxHeight(210);
+        produitVBox.setMaxHeight(210);
         
         HBox.setHgrow(leftVBox, Priority.ALWAYS);
         HBox.setHgrow(rightVBox, Priority.ALWAYS);
@@ -193,12 +250,11 @@ public class AjouterVenteWindow {
         listeProduitsVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         produitVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         linesCommandeVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
-                
-                
     }
 
     private void addWidgetToWindow() {
-        root.getChildren().addAll(leftVBox, rightVBox);
+        root.setCenter(body);
+        body.getChildren().addAll(leftVBox, rightVBox);
         leftVBox.getChildren().addAll(clientVBox, listeProduitsVBox);
         rightVBox.getChildren().addAll(produitVBox, linesCommandeVBox);
         //leftVBox
@@ -224,7 +280,7 @@ public class AjouterVenteWindow {
             new HBox(qteLabel,qteProduitLabel),
             new HBox(qteDemandeLabel,qteDemandeTextField),
             new HBox(prixVenteLabel,prixVenteTextField),
-            ajouterProduitALineCommandeButton
+            new HBox(10, ajouterProduitALineCommandeButton, ajouterProduitButton)
                     );
         //line de commande
         linesCommandeVBox.getChildren().addAll(infoGlobalVBox, listeLinesCommandeTableView);
@@ -235,9 +291,48 @@ public class AjouterVenteWindow {
     }
 
     private void eventeHanlder() {
+        //ajouter un eventLinstener pour chaque item de ComboBox
+        //newItem represente item selectionné
+        clientComboBox.valueProperty().addListener((obs, oldItem, newItem)->{
+            handler.setSelectedClientToLabels(newItem);
+        });
+        AjouterClientButton.setOnAction(event->{
+           AjouterClientFormWindow ajouterClient = new AjouterClientFormWindow();
+           ajouterClient.annulerClientButton.setOnAction(e->{
+               ajouterClient.window.close();
+               handler.setClientsToComboBox();
+           });
+        });
+        rechercherProduitButton.setOnAction(event->{
+            handler.findProduit();
+        });
+        listeProduitsTableView.setRowFactory(event->{
+            TableRow<Produit> row = new TableRow();
+            row.setOnMouseClicked(e->{
+                handler.setSelectedProduitToLabels(row.getItem());
+                
+            });
+            return row;
+        });
+        ajouterProduitALineCommandeButton.setOnAction(event->{
+            
+        });
+        ajouterProduitButton.setOnAction(event->{
+            AjouterProduitFormWindow ajouterProduit = new AjouterProduitFormWindow();
+            ajouterProduit.annulerProduitButton.setOnAction(e->{
+                ajouterProduit.window.close();
+                handler.updateProduitTableView();
+            });
+        });
     }
     
     private void addColumnToTable(){
+        designationTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("designation"));
+        categorieTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("categorie"));
+        prixAchatTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Double>("PrixAchat"));
+        qteTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Long>("qte"));
+        totalTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("total"));
+        
         listeProduitsTableView.getColumns().addAll(
         designationTableColumn,categorieTableColumn,
         prixAchatTableColumn,qteTableColumn,
