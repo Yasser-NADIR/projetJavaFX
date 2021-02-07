@@ -16,10 +16,17 @@ import java.util.List;
 public class Vente {
     private long id;
     private List<LineCommande> listLineCommande = new ArrayList<>();
+    private Client client;
     private LocalDate date;
 
-    public Vente(Long id, LocalDate date) {
+    public Vente(Client client, LocalDate date) {
+        this.client = client;
+        this.date = date;
+    }
+
+    public Vente(long id, Client client, LocalDate date) {
         this.id = id;
+        this.client = client;
         this.date = date;
     }
 

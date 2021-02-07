@@ -101,6 +101,6 @@ public class Produit {
     
     @Override
     public String toString() {
-        return designation+"\t prix :"+prixAchat+"\t quantité :"+qte;
+        return designation;
     }
 }

@@ -48,8 +48,9 @@ public class AjouterVenteWindow {
     VBox linesCommandeVBox = new VBox();
     //la partie de client
     Label clientLabel = new Label("client : ");
-    ComboBox<Client> clientComboBox = new ComboBox();
-    Button AjouterClientButton = new Button("Ajouter");
+    //ajouter button pour selectionné un client
+    Button selectionnerClientButton = new Button("Selectionner un client");
+    Button AjouterClientButton = new Button("Ajouter un client");
     Label nomLabel = new Label("Nom : ");
     Label nomClientLabel = new Label("");
     Label prenomLabel = new Label("Prenom : ");
@@ -88,26 +89,49 @@ public class AjouterVenteWindow {
     TextField prixVenteTextField = new TextField();
     Button ajouterProduitALineCommandeButton = new Button("ajouter au line");
     Button ajouterProduitButton = new Button("ajouter Produit");
-    
     //line de commande
     //les statistiques
     VBox infoGlobalVBox = new VBox();
     HBox totalPrixHorsTaxeHBox = new HBox();
     Label totalPrixHorsTaxeLabel = new Label("Total(HT): "); 
-    Label totalPrixHorsCalculerTaxeLabel = new Label("0.0");
+    Label totalPrixHorsTaxeCalculerLabel = new Label("0.0");
     HBox taxeHBox = new HBox();
-    Label taxeHBoxLabel = new Label("Taxe(20%): ");
-    Label taxeHBoxCalculerTaxeLabel = new Label("0.0");
+    Label taxeLabel = new Label("Taxe(20%): ");
+    Label taxeCalculerLabel = new Label("0.0");
     HBox TTCHBox = new HBox();
     Label TTCLabel = new Label("TTC: ");
-    Label TTCCalculerTaxeLabel = new Label("0.0");
+    Label TTCCalculerLabel = new Label("0.0");
     //le tableau des lines de commande
     TableView<LineCommande> listeLinesCommandeTableView = new TableView<>();
     TableColumn<LineCommande, String> designationProduitTableColumn = new TableColumn<>("Produit");
-    TableColumn<LineCommande, String> prixVenteTableColumn= new TableColumn<>("Prix vente");
+    TableColumn<LineCommande, Double> prixVenteTableColumn= new TableColumn<>("Prix vente");
     TableColumn<LineCommande, Long> qteDemandeTableColumn = new TableColumn<>("Quantité");
     TableColumn<LineCommande, LocalDate> dateCommandeTableColumn = new TableColumn<>("date");
-    TableColumn totalCommandeTableColumn = new TableColumn("Total");
+    TableColumn<LineCommande, Double> totalCommandeTableColumn = new TableColumn("Total");
+
+    public Label getTotalPrixHorsTaxeCalculerLabel() {
+        return totalPrixHorsTaxeCalculerLabel;
+    }
+
+    public Label getTaxeCalculerLabel() {
+        return taxeCalculerLabel;
+    }
+
+    public Label getTTCCalculerLabel() {
+        return TTCCalculerLabel;
+    }
+
+    public TableView<LineCommande> getListeLinesCommandeTableView() {
+        return listeLinesCommandeTableView;
+    }
+
+    public TextField getQteDemandeTextField() {
+        return qteDemandeTextField;
+    }
+
+    public TextField getPrixVenteTextField() {
+        return prixVenteTextField;
+    }
 
     public Label getDesignationProduitLabel() {
         return designationProduitLabel;
@@ -131,10 +155,6 @@ public class AjouterVenteWindow {
 
     public TableView<Produit> getListeProduitsTableView() {
         return listeProduitsTableView;
-    }
-
-    public ComboBox getClientComboBox() {
-        return clientComboBox;
     }
 
     public Label getNomClientLabel() {
@@ -199,6 +219,7 @@ public class AjouterVenteWindow {
         adrClientLabel.getStyleClass().add("lbl");
         dateLabel.getStyleClass().add("lbl");
         AjouterClientButton.getStyleClass().add("btn");
+        selectionnerClientButton.getStyleClass().add("btn");
         
         designationLabel.getStyleClass().add("lbl");
         designationProduitLabel.getStyleClass().add("lbl");
@@ -214,11 +235,11 @@ public class AjouterVenteWindow {
         ajouterProduitButton.getStyleClass().addAll("btn", "lbl");
         
         totalPrixHorsTaxeLabel.getStyleClass().add("lbl");
-        totalPrixHorsCalculerTaxeLabel.getStyleClass().add("lbl");
-        taxeHBoxLabel.getStyleClass().add("lbl");
-        taxeHBoxCalculerTaxeLabel.getStyleClass().add("lbl");
+        totalPrixHorsTaxeCalculerLabel.getStyleClass().add("lbl");
+        taxeLabel.getStyleClass().add("lbl");
+        taxeCalculerLabel.getStyleClass().add("lbl");
         TTCLabel.getStyleClass().add("lbl");
-        TTCCalculerTaxeLabel.getStyleClass().add("lbl");
+        TTCCalculerLabel.getStyleClass().add("lbl");
         
         rechercherProuditLabel.getStyleClass().add("lbl");
         rechercherProduitButton.getStyleClass().add("btn");
@@ -235,6 +256,8 @@ public class AjouterVenteWindow {
         
         clientVBox.setMaxHeight(210);
         produitVBox.setMaxHeight(210);
+        clientVBox.setMinHeight(210);
+        produitVBox.setMinHeight(210);
         
         HBox.setHgrow(leftVBox, Priority.ALWAYS);
         HBox.setHgrow(rightVBox, Priority.ALWAYS);
@@ -260,7 +283,7 @@ public class AjouterVenteWindow {
         //leftVBox
         //clientVBox
         clientVBox.getChildren().addAll( 
-            new HBox(20, clientLabel,clientComboBox, AjouterClientButton),
+            new HBox(20, clientLabel,selectionnerClientButton, AjouterClientButton),
             new HBox(nomLabel,nomClientLabel),
             new HBox(prenomLabel,prenomClientLabel),
             new HBox(teleLabel,teleClientLabel),
@@ -285,22 +308,19 @@ public class AjouterVenteWindow {
         //line de commande
         linesCommandeVBox.getChildren().addAll(infoGlobalVBox, listeLinesCommandeTableView);
         infoGlobalVBox.getChildren().addAll(totalPrixHorsTaxeHBox, taxeHBox, TTCHBox);
-        totalPrixHorsTaxeHBox.getChildren().addAll( totalPrixHorsTaxeLabel, totalPrixHorsCalculerTaxeLabel);
-        taxeHBox.getChildren().addAll( taxeHBoxLabel, taxeHBoxCalculerTaxeLabel);
-        TTCHBox.getChildren().addAll( TTCLabel, TTCCalculerTaxeLabel);
+        totalPrixHorsTaxeHBox.getChildren().addAll( totalPrixHorsTaxeLabel, totalPrixHorsTaxeCalculerLabel);
+        taxeHBox.getChildren().addAll( taxeLabel, taxeCalculerLabel);
+        TTCHBox.getChildren().addAll( TTCLabel, TTCCalculerLabel);
     }
 
     private void eventeHanlder() {
-        //ajouter un eventLinstener pour chaque item de ComboBox
-        //newItem represente item selectionné
-        clientComboBox.valueProperty().addListener((obs, oldItem, newItem)->{
-            handler.setSelectedClientToLabels(newItem);
+        selectionnerClientButton.setOnAction(event->{
+            
         });
         AjouterClientButton.setOnAction(event->{
            AjouterClientFormWindow ajouterClient = new AjouterClientFormWindow();
            ajouterClient.annulerClientButton.setOnAction(e->{
                ajouterClient.window.close();
-               handler.setClientsToComboBox();
            });
         });
         rechercherProduitButton.setOnAction(event->{
@@ -315,7 +335,7 @@ public class AjouterVenteWindow {
             return row;
         });
         ajouterProduitALineCommandeButton.setOnAction(event->{
-            
+            handler.addProduitToLineCommande();
         });
         ajouterProduitButton.setOnAction(event->{
             AjouterProduitFormWindow ajouterProduit = new AjouterProduitFormWindow();
@@ -332,6 +352,12 @@ public class AjouterVenteWindow {
         prixAchatTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Double>("PrixAchat"));
         qteTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Long>("qte"));
         totalTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("total"));
+        
+        designationProduitTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, String>("produit"));
+        prixVenteTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, Double>("prixVente"));
+        qteDemandeTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, Long>("qte"));
+        dateCommandeTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, LocalDate>("date"));
+        totalCommandeTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, Double>("total"));
         
         listeProduitsTableView.getColumns().addAll(
         designationTableColumn,categorieTableColumn,

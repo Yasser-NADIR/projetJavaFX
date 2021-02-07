@@ -18,6 +18,13 @@ public class LineCommande {
     private long qte;
     private LocalDate date;
 
+    public LineCommande(Produit produit, double prixVente, long qte, LocalDate date) {
+        this.produit = produit;
+        this.prixVente = prixVente;
+        this.qte = qte;
+        this.date = date;
+    }
+
     public LineCommande(long id, Produit produit, double prixVente, long qte, LocalDate date) {
         this.id = id;
         this.produit = produit;
@@ -66,6 +73,10 @@ public class LineCommande {
         this.date = date;
     }
 
+    public double getTotal(){
+        return qte*prixVente;
+    }
+    
     @Override
     public String toString() {
         return "LineCommande{" + "id=" + id + ", produit=" + produit + ", prixVente=" + prixVente + ", qte=" + qte + ", date=" + date + '}';
