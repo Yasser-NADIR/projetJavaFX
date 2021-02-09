@@ -31,6 +31,16 @@ public class AjouterVenteHandler {
     Vente vente;
     List<LineCommande> list = new ArrayList<>();
     Produit selectedProduit;
+    Client selectedClient;
+
+    public void setSelectedClient(Client selectedClient) {
+        this.selectedClient = selectedClient;
+        ajouterVente.getNomClientLabel().setText(selectedClient.getNom());
+        ajouterVente.getPrenomClientLabel().setText(selectedClient.getPrenom());
+        ajouterVente.getTeleClientLabel().setText(selectedClient.getTele());
+        ajouterVente.getEmailClientLabel().setText(selectedClient.getEmail());
+        ajouterVente.getAdrClientLabel().setText(selectedClient.getAddr());
+    }
 
     public AjouterVenteHandler(AjouterVenteWindow ajouterVente) {
         this.ajouterVente = ajouterVente;
@@ -54,6 +64,8 @@ public class AjouterVenteHandler {
         ajouterVente.getCategorieProduitLabel().setText(String.valueOf(produit.getCategorie()));
         ajouterVente.getPrixAchatProduitLabel().setText(String.valueOf(produit.getPrixAchat()));
         ajouterVente.getQteProduitLabel().setText(String.valueOf(produit.getQte()));
+        ajouterVente.getQteDemandeTextField().setText(String.valueOf(produit.getQte()));
+        ajouterVente.getPrixVenteTextField().setText(String.valueOf(produit.getPrixVente()));
         selectedProduit = produit;
     }
     

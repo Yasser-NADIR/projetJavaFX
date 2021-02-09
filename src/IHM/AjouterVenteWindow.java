@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -183,7 +182,6 @@ public class AjouterVenteWindow {
         addWidgetToWindow();
         setStyleSheet();
         eventeHanlder();
-        handler.setClientsToComboBox();
         handler.updateProduitTableView();
         window.show();
     }
@@ -195,7 +193,7 @@ public class AjouterVenteWindow {
         window.setMinHeight(400);
         window.setScene(scene);
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setMaximized(true);
+//        window.setMaximized(true);
     }
 
     private void setStyleSheet() {
@@ -268,7 +266,6 @@ public class AjouterVenteWindow {
         VBox.setVgrow(listeProduitsTableView, Priority.ALWAYS);
         VBox.setVgrow(listeLinesCommandeTableView, Priority.ALWAYS);
         
-        
         clientVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         listeProduitsVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
         produitVBox.setEffect(new DropShadow(10, 0, 0, Color.BLACK));
@@ -312,10 +309,16 @@ public class AjouterVenteWindow {
         taxeHBox.getChildren().addAll( taxeLabel, taxeCalculerLabel);
         TTCHBox.getChildren().addAll( TTCLabel, TTCCalculerLabel);
     }
-
+    
     private void eventeHanlder() {
-        selectionnerClientButton.setOnAction(event->{
-            
+        selectionnerClientButton.setOnAction(event1->{
+            //ici on cree ListerClientWindow apartir du methode static selectionListeClient
+            //cette methode prend en argument un fonction accepte Client comme paramettre et Client comme return
+            ListerClientWindow listerClient = ListerClientWindow.selectionListeClient((row)->{
+                handler.setSelectedClient(row);
+                
+                return null;
+            });
         });
         AjouterClientButton.setOnAction(event->{
            AjouterClientFormWindow ajouterClient = new AjouterClientFormWindow();
@@ -330,7 +333,6 @@ public class AjouterVenteWindow {
             TableRow<Produit> row = new TableRow();
             row.setOnMouseClicked(e->{
                 handler.setSelectedProduitToLabels(row.getItem());
-                
             });
             return row;
         });

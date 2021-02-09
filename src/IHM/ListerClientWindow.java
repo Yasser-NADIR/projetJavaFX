@@ -11,11 +11,13 @@ import java.time.LocalDate;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  *
@@ -36,6 +38,10 @@ public class ListerClientWindow {
     TableColumn<Client, String> adrTableColumn = new TableColumn<>("adresse");
     TableColumn<Client, LocalDate> dateTableColumn = new TableColumn<>("date");
 
+    public Stage getWindow() {
+        return window;
+    }
+
     public TableView<Client> getClientTableView() {
         return clientTableView;
     }
@@ -44,10 +50,25 @@ public class ListerClientWindow {
         setupWindow();
         setStyleSheet();
         addWidgetToWindow();
+        eventHandler();
         handler.updateClientTableView();
         window.show();
     }
 
+    //creation d'un instructeur privé pour par la suite l'appeler dans une methode statique
+    //ce constructeur se difére du constructeur normal pas la fonction setFunctionToEventTableRow
+    //set methode prend une fontion et la definir comme methode d'evenement du rowFactory
+    //<p, r>: p les paramettre, r le return
+    public ListerClientWindow(Callback<Client, Client> Function){
+        setupWindow();
+        setStyleSheet();
+        addWidgetToWindow();
+        eventHandler();
+        handler.updateClientTableView();
+        handler.setFunctionToEventTableRow(Function);
+        window.show();
+    }
+    
     private void setupWindow() {
         window.setTitle("liste des produis");
         window.setWidth(800);
@@ -70,6 +91,9 @@ public class ListerClientWindow {
         setupClientTableView();
     }
 
+    private void eventHandler(){
+    }
+    
     private void setupClientTableView() {
     
         nomTableColumn.setCellValueFactory(new PropertyValueFactory<Client, String>("nom"));
@@ -81,5 +105,13 @@ public class ListerClientWindow {
         
         clientTableView.getColumns().addAll(nomTableColumn, prenomTableColumn, 
                 teleTableColumn, emailTableColumn, adrTableColumn, dateTableColumn);
+    }
+    
+    //la methode static pour appeler le constructeur privé
+    //prend en argument la fonction qui sera appeler dans eventement rowFactory dans row
+    //<p, r>: p les paramettre, r le return
+    public static ListerClientWindow selectionListeClient(Callback<Client, Client> Function){
+        ListerClientWindow listerClient = new ListerClientWindow(Function);
+        return listerClient;
     }
 }
