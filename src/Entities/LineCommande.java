@@ -17,20 +17,32 @@ public class LineCommande {
     private double prixVente;
     private long qte;
     private LocalDate date;
-
-    public LineCommande(Produit produit, double prixVente, long qte, LocalDate date) {
+    private Vente vente;
+    
+    
+    public LineCommande(Produit produit, double prixVente, long qte, Vente vente, LocalDate date) {
         this.produit = produit;
         this.prixVente = prixVente;
         this.qte = qte;
         this.date = date;
+        this.vente = vente;
     }
 
-    public LineCommande(long id, Produit produit, double prixVente, long qte, LocalDate date) {
+    public LineCommande(long id, Produit produit, double prixVente, long qte, Vente vente, LocalDate date) {
         this.id = id;
         this.produit = produit;
         this.prixVente = prixVente;
         this.qte = qte;
         this.date = date;
+        this.vente = vente;
+    }
+
+    public Vente getVente() {
+        return vente;
+    }
+
+    public void setVente(Vente vente) {
+        this.vente = vente;
     }
 
     public long getId() {

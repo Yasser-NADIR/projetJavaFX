@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package IHM;
+import javafx.scene.control.Spinner;
 
 import Entities.LineCommande;
 import Entities.Produit;
@@ -61,7 +62,7 @@ public class AjouterVenteWindow {
     Label adrLabel = new Label("Adresse : ");
     Label adrClientLabel = new Label("");
     Label dateLabel = new Label("Date : ");
-    DatePicker dateDatePicker = new DatePicker();
+    DatePicker dateDatePicker = new DatePicker(LocalDate.now());
     //la partie de liste des produits
     HBox rechercherProduitHbox = new HBox(); 
     Label rechercherProuditLabel = new Label("Designation :");
@@ -71,7 +72,6 @@ public class AjouterVenteWindow {
     TableColumn<Produit, String> designationTableColumn = new TableColumn<>("designation");
     TableColumn<Produit, String> categorieTableColumn = new TableColumn<>("categorie");
     TableColumn<Produit, Double> prixAchatTableColumn = new TableColumn<>("prix achat");
-    TableColumn<Produit, Long> qteTableColumn = new TableColumn<>("quatité");
     TableColumn totalTableColumn = new TableColumn("total");
     //la partie de produit
     Label designationLabel = new Label("Designation :");
@@ -111,6 +111,10 @@ public class AjouterVenteWindow {
     HBox topContainerHBox = new HBox(10);
     Button nouveauVenteButton = new Button("Nouveau vente");
     Button enregistrerVenteButton = new Button("Enregistrer vente");
+
+    public DatePicker getDateDatePicker() {
+        return dateDatePicker;
+    }
 
     public Label getTotalPrixHorsTaxeCalculerLabel() {
         return totalPrixHorsTaxeCalculerLabel;
@@ -367,7 +371,7 @@ public class AjouterVenteWindow {
             handler.nouveauVente();
         });
         enregistrerVenteButton.setOnAction(event->{
-            
+            handler.addVente();
         });
     }
     
@@ -375,7 +379,6 @@ public class AjouterVenteWindow {
         designationTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("designation"));
         categorieTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("categorie"));
         prixAchatTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Double>("PrixAchat"));
-        qteTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, Long>("qte"));
         totalTableColumn.setCellValueFactory(new PropertyValueFactory<Produit, String>("total"));
         
         designationProduitTableColumn.setCellValueFactory(new PropertyValueFactory<LineCommande, String>("produit"));
@@ -386,8 +389,7 @@ public class AjouterVenteWindow {
         
         listeProduitsTableView.getColumns().addAll(
         designationTableColumn,categorieTableColumn,
-        prixAchatTableColumn,qteTableColumn,
-        totalTableColumn
+        prixAchatTableColumn,totalTableColumn
         );
         listeLinesCommandeTableView.getColumns().addAll(
             designationProduitTableColumn, prixVenteTableColumn, 

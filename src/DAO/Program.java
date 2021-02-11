@@ -6,6 +6,7 @@
 package DAO;
 
 import Entities.Client;
+import Entities.LineCommande;
 import Entities.Produit;
 import Entities.Vente;
 import java.time.LocalDate;
@@ -17,31 +18,29 @@ import java.util.List;
  */
 public class Program {
     public static void main(String arg[]){
+       ILineCommandeDAO lineCommandeDAO = new LineCommandeDAOImpl();
+       IProduitDAO produitDAO = new ProduitDAOImpl();
        IVenteDAO venteDAO = new VenteDAOImpl();
-       Client client = new Client(1,  "nadir", "yasser", "0610065615", "qmdlkfj", "qmsdlkfjj", LocalDate.now());
-       Vente vente = new Vente(1, client, LocalDate.now());
-       System.out.println("------------------getAll()");
-       List<Vente> list = venteDAO.getAll();
-       for(Vente v: list){
-           System.out.println(v);
-       }
-       System.out.println("------------------getAllByClientId(idClient)");
-       list = venteDAO.getAllByClientId(6L);
-       for(Vente v: list){
-           System.out.println(v);
-       }
-       System.out.println("------------------getOne(id)");
-       vente = venteDAO.getOne(2);
-       System.out.println(vente);
-       System.out.println("------------------getOne(nomClient)");
-       vente = venteDAO.getOne("NADIR");
-       System.out.println(vente);
-       System.out.println("------------------add(vente)");
-//       venteDAO.add(v);
-       System.out.println("------------------delete(id)");
-//       venteDAO.delete(1);
-       System.out.println("------------------update(vente, id)");
-//       v.getClient().setId(6);
-//       venteDAO.update(v, 2);
+       
+       List<LineCommande> list ;
+       LineCommande line;
+//       list = lineCommandeDAO.getAll();
+//       for(LineCommande l : list){
+//           System.out.println(l);
+//       }
+//       list = lineCommandeDAO.getLineCommandeByVenteId(2L);
+//       for(LineCommande l : list){
+//           System.out.println(l);
+//       }
+//        line = lineCommandeDAO.getOne(1);
+//        System.out.println(line);
+        line = new LineCommande(
+                produitDAO.getOne(7),
+                1200, 123,
+                venteDAO.getOne(3), LocalDate.now()
+        );
+//        lineCommandeDAO.add(line);
+//        lineCommandeDAO.delete(3);
+//        lineCommandeDAO.update(line, 1);
     }
 }

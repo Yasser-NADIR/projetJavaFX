@@ -5,13 +5,13 @@
  */
 package DAO;
 
-import Entities.Vente;
+import Entities.LineCommande;
 import java.util.List;
 
 /**
  *
  * @author COZMET
  */
-public interface IVenteDAO extends IDAO<Vente>{
-    public List<Vente> getAllByClientId(Long id);
+public interface ILineCommandeDAO extends IDAO<LineCommande>{
+    public List<LineCommande> getLineCommandeByVenteId(Long id);
 }

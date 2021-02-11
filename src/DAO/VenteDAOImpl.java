@@ -23,10 +23,11 @@ public class VenteDAOImpl extends AbstractDAO implements IVenteDAO {
         Vente vente = null;
         PreparedStatement pst;
         ResultSet rs;
-        String query = "SELECT * FROM vente";
+        String query = "SELECT * FROM vente WHERE id = ?";
         Client client;
         try{
             pst = connection.prepareStatement(query);
+            pst.setLong(1, id);
             rs = pst.executeQuery();
             if(rs.next()){
                 client = clientDAO.getOne(rs.getLong("client"));
@@ -39,31 +40,6 @@ public class VenteDAOImpl extends AbstractDAO implements IVenteDAO {
         }
         return vente;
     }
-    
-    @Override
-    public Vente getOne(String nomClient){
-        Vente vente = null;
-        Client client;
-        PreparedStatement pst;
-        ResultSet rs;
-        String query = "Select * FROM vente WHERE client in (SELECT id FROM client WHERE nom = ?)";
-        try{
-            pst = connection.prepareStatement(query);
-            pst.setString(1, nomClient);
-            rs = pst.executeQuery();
-            if(rs.next()){
-                client = clientDAO.getOne(rs.getLong("client"));
-                vente = new Vente(
-                        rs.getLong("id"), client, rs.getDate("date").toLocalDate()
-                );
-            }
-        }catch(Exception ex){
-            System.out.println(ex.getMessage());
-        }
-        return vente;
-        
-    }
-
     @Override
     public List<Vente> getAll() {
         List<Vente> list = new ArrayList<>();

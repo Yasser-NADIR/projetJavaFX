@@ -8,7 +8,9 @@ package Handler;
 import DAO.ClientDAOImpl;
 import DAO.IClientDAO;
 import DAO.IProduitDAO;
+import DAO.IVenteDAO;
 import DAO.ProduitDAOImpl;
+import DAO.VenteDAOImpl;
 import Entities.Client;
 import Entities.LineCommande;
 import Entities.Produit;
@@ -28,6 +30,7 @@ public class AjouterVenteHandler {
     AjouterVenteWindow ajouterVente;
     IClientDAO clientDAO = new ClientDAOImpl();
     IProduitDAO produitDAO = new ProduitDAOImpl();
+    IVenteDAO venteDAO = new VenteDAOImpl();
     Vente vente;
     List<LineCommande> list = new ArrayList<>();
     Produit selectedProduit;
@@ -88,6 +91,7 @@ public class AjouterVenteHandler {
                 selectedProduit,
                 Double.valueOf(ajouterVente.getPrixVenteTextField().getText()),
                 Long.valueOf(ajouterVente.getQteDemandeTextField().getText()),
+                null,
                 LocalDate.now()
             ));
             clearProduitFields();
@@ -137,7 +141,6 @@ public class AjouterVenteHandler {
     }
     
     public void nouveauVente(){
-        
         selectedClient = null;
         selectedProduit = null;
         
@@ -152,6 +155,27 @@ public class AjouterVenteHandler {
         clearProduitFields();
         ajouterVente.getListeLinesCommandeTableView().getItems().clear();
         UpdateStatistiques();
+    }
+    
+    public void addVente(){
+        if(selectedClient!=null){
+            Vente vente = new Vente(
+                    selectedClient, ajouterVente.getDateDatePicker().getValue()
+            );
+            System.out.println(vente.getClient().getId());
+            venteDAO.add(vente);
+            nouveauVente();
+        }else{
+            selectionneClientAlert();
+        }
+    }
+    
+    private void selectionneClientAlert(){
+        Alert boiteDialog = new Alert(AlertType.WARNING);
+        boiteDialog.setTitle("Attention");
+        boiteDialog.setHeaderText(null);
+        boiteDialog.setContentText("Il faut selectionner un client");
+        boiteDialog.showAndWait();
     }
     
 }

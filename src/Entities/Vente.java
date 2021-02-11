@@ -19,6 +19,14 @@ public class Vente {
     private Client client;
     private LocalDate date;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Vente(Client client, LocalDate date) {
         this.client = client;
         this.date = date;
