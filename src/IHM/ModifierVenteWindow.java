@@ -5,9 +5,12 @@
  */
 package IHM;
 
+import Entities.Client;
 import Entities.LineCommande;
 import Entities.Produit;
+import Entities.Vente;
 import Handler.AjouterVenteHandler;
+import Handler.ModifierVenteHandler;
 import java.time.LocalDate;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -33,12 +36,12 @@ import javafx.stage.Stage;
  *
  * @author COZMET
  */
-public class AjouterVenteWindow {
+public class ModifierVenteWindow {
     Stage window = new Stage();
     BorderPane root = new BorderPane();
     HBox body = new HBox();
     Scene scene = new Scene(root);
-    AjouterVenteHandler handler = new AjouterVenteHandler(this);
+    ModifierVenteHandler handler = new ModifierVenteHandler(this);
     VBox leftVBox = new VBox();
     VBox rightVBox = new VBox();
     VBox clientVBox = new VBox();
@@ -46,10 +49,6 @@ public class AjouterVenteWindow {
     VBox produitVBox = new VBox();
     VBox linesCommandeVBox = new VBox();
     //la partie de client
-    Label clientLabel = new Label("client : ");
-    //ajouter button pour selectionné un client
-    Button selectionnerClientButton = new Button("Selectionner un client");
-    Button AjouterClientButton = new Button("Ajouter un client");
     Label nomLabel = new Label("Nom : ");
     Label nomClientLabel = new Label("");
     Label prenomLabel = new Label("Prenom : ");
@@ -61,7 +60,7 @@ public class AjouterVenteWindow {
     Label adrLabel = new Label("Adresse : ");
     Label adrClientLabel = new Label("");
     Label dateLabel = new Label("Date : ");
-    DatePicker dateDatePicker = new DatePicker(LocalDate.now());
+    Label dateClientLabel = new Label("");
     //la partie de liste des produits
     HBox rechercherProduitHbox = new HBox(); 
     Label rechercherProuditLabel = new Label("Designation :");
@@ -108,12 +107,14 @@ public class AjouterVenteWindow {
     TableColumn<LineCommande, Double> totalCommandeTableColumn = new TableColumn("Total");
     //dans le top de BorderPane
     HBox topContainerHBox = new HBox(10);
-    Button nouveauVenteButton = new Button("Nouveau vente");
-    Button enregistrerVenteButton = new Button("Enregistrer vente");
-    Button RechercherVenteButton = new Button("Rechercher vente");
+    Button modifierVenteButton = new Button("Modifier vente");
 
-    public DatePicker getDateDatePicker() {
-        return dateDatePicker;
+    public Stage getWindow() {
+        return window;
+    }
+
+    public Label getDateClientLabel() {
+        return dateClientLabel;
     }
 
     public Label getTotalPrixHorsTaxeCalculerLabel() {
@@ -185,12 +186,16 @@ public class AjouterVenteWindow {
     }
 
     
-    public AjouterVenteWindow() {
+    public ModifierVenteWindow(Vente vente) {
         setupWindow();
         addWidgetToWindow();
         setStyleSheet();
         eventeHanlder();
+        handler.setVente(vente);
+        handler.setClient(vente.getClient());
+        handler.setClientToLabels();
         handler.updateProduitTableView();
+        handler.updateLineCommandeTableView();
         window.show();
     }
 
@@ -212,7 +217,6 @@ public class AjouterVenteWindow {
         produitVBox.getStyleClass().add("main-carte");
         linesCommandeVBox.getStyleClass().add("main-carte");
         
-        clientLabel.getStyleClass().add("lbl");
         nomLabel.getStyleClass().add("lbl");
         nomClientLabel.getStyleClass().add("lbl");
         prenomLabel.getStyleClass().add("lbl");
@@ -224,8 +228,7 @@ public class AjouterVenteWindow {
         adrLabel.getStyleClass().add("lbl");
         adrClientLabel.getStyleClass().add("lbl");
         dateLabel.getStyleClass().add("lbl");
-        AjouterClientButton.getStyleClass().add("btn");
-        selectionnerClientButton.getStyleClass().add("btn");
+        dateClientLabel.getStyleClass().add("lbl");
         
         designationLabel.getStyleClass().add("lbl");
         designationProduitLabel.getStyleClass().add("lbl");
@@ -282,17 +285,14 @@ public class AjouterVenteWindow {
         //top de BorderPane
         topContainerHBox.getStyleClass().add("main-carte");
         
-        nouveauVenteButton.getStyleClass().add("btn");
-        enregistrerVenteButton.getStyleClass().add("btn");
-        RechercherVenteButton.getStyleClass().add("btn");
-        
+        modifierVenteButton.getStyleClass().add("btn");
         topContainerHBox.setAlignment(Pos.CENTER);
     }
 
     private void addWidgetToWindow() {
         //le top de BorderPane
         root.setTop(topContainerHBox);
-        topContainerHBox.getChildren().addAll(nouveauVenteButton, enregistrerVenteButton, RechercherVenteButton);
+        topContainerHBox.getChildren().addAll(modifierVenteButton);
         //le centere de BorderPane
         root.setCenter(body);
         body.getChildren().addAll(leftVBox, rightVBox);
@@ -301,13 +301,12 @@ public class AjouterVenteWindow {
         //leftVBox
         //clientVBox
         clientVBox.getChildren().addAll( 
-            new HBox(20, clientLabel,selectionnerClientButton, AjouterClientButton),
             new HBox(nomLabel,nomClientLabel),
             new HBox(prenomLabel,prenomClientLabel),
             new HBox(teleLabel,teleClientLabel),
             new HBox(emailLabel,emailClientLabel),
             new HBox(adrLabel,adrClientLabel),
-            new HBox(dateLabel,dateDatePicker));
+            new HBox(dateLabel,dateClientLabel));
         //listeProduits
         listeProduitsVBox.getChildren().addAll(rechercherProduitHbox, listeProduitsTableView);
         rechercherProduitHbox.getChildren().addAll(rechercherProuditLabel, rechercherProduitTextField, rechercherProduitButton);
@@ -332,20 +331,6 @@ public class AjouterVenteWindow {
     }
     
     private void eventeHanlder() {
-        selectionnerClientButton.setOnAction(event1->{
-            //ici on cree ListerClientWindow apartir du methode static selectionListeClient
-            //cette methode prend en argument un fonction accepte Client comme paramettre et Client comme return
-            ListerClientWindow listerClient = ListerClientWindow.selectionListeClient((row)->{
-                handler.setSelectedClient(row);
-                return null;
-            });
-        });
-        AjouterClientButton.setOnAction(event->{
-           AjouterClientFormWindow ajouterClient = new AjouterClientFormWindow();
-           ajouterClient.annulerClientButton.setOnAction(e->{
-               ajouterClient.window.close();
-           });
-        });
         rechercherProduitButton.setOnAction(event->{
             handler.findProduit();
         });
@@ -370,15 +355,12 @@ public class AjouterVenteWindow {
             AjouterProduitFormWindow ajouterProduit = new AjouterProduitFormWindow();
             ajouterProduit.annulerProduitButton.setOnAction(e->{
                 ajouterProduit.window.close();
-                handler.updateProduitTableView();
+                handler.findProduit();
             });
         });
         
-        nouveauVenteButton.setOnAction(event->{
-            handler.nouveauVente();
-        });
-        enregistrerVenteButton.setOnAction(event->{
-            handler.addVente();
+        modifierVenteButton.setOnAction(event->{
+            handler.updateVente();
         });
     }
     

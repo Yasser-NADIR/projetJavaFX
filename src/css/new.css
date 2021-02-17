@@ -17,3 +17,13 @@
     -fx-text-fill: white;
     -fx-font-size: 14px
 }
+
+.titre{
+    -fx-background-color: #4DABF5;
+    -fx-alignment: center;
+}
+
+.lblTitre{
+    -fx-text-fill: white;
+    -fx-font-size: 30px
+}

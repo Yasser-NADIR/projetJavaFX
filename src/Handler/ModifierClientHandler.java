@@ -66,7 +66,6 @@ public class ModifierClientHandler {
         Pattern pattern = Pattern.compile("^\\+212[6-7][0-9]{8}$|^0[6-7][0-9]{8}$");
         Matcher matcher = pattern.matcher(num);
         if(!matcher.find()){
-            System.out.println("not found");
             return false;
         }
         return true;

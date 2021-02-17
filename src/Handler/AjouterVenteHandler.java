@@ -7,8 +7,10 @@ package Handler;
 
 import DAO.ClientDAOImpl;
 import DAO.IClientDAO;
+import DAO.ILineCommandeDAO;
 import DAO.IProduitDAO;
 import DAO.IVenteDAO;
+import DAO.LineCommandeDAOImpl;
 import DAO.ProduitDAOImpl;
 import DAO.VenteDAOImpl;
 import Entities.Client;
@@ -16,6 +18,7 @@ import Entities.LineCommande;
 import Entities.Produit;
 import Entities.Vente;
 import IHM.AjouterVenteWindow;
+import IHM.ListerVenteByClientWindow;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,7 @@ public class AjouterVenteHandler {
     IClientDAO clientDAO = new ClientDAOImpl();
     IProduitDAO produitDAO = new ProduitDAOImpl();
     IVenteDAO venteDAO = new VenteDAOImpl();
+    ILineCommandeDAO lineCommandeDAO = new LineCommandeDAOImpl();
     Vente vente;
     List<LineCommande> list = new ArrayList<>();
     Produit selectedProduit;
@@ -43,6 +47,9 @@ public class AjouterVenteHandler {
         ajouterVente.getTeleClientLabel().setText(selectedClient.getTele());
         ajouterVente.getEmailClientLabel().setText(selectedClient.getEmail());
         ajouterVente.getAdrClientLabel().setText(selectedClient.getAddr());
+        vente = new Vente(
+                selectedClient, null
+            );
     }
 
     public AjouterVenteHandler(AjouterVenteWindow ajouterVente) {
@@ -91,7 +98,7 @@ public class AjouterVenteHandler {
                 selectedProduit,
                 Double.valueOf(ajouterVente.getPrixVenteTextField().getText()),
                 Long.valueOf(ajouterVente.getQteDemandeTextField().getText()),
-                null,
+                vente,
                 LocalDate.now()
             ));
             clearProduitFields();
@@ -159,11 +166,12 @@ public class AjouterVenteHandler {
     
     public void addVente(){
         if(selectedClient!=null){
-            Vente vente = new Vente(
-                    selectedClient, ajouterVente.getDateDatePicker().getValue()
-            );
-            System.out.println(vente.getClient().getId());
+            vente.setDate(ajouterVente.getDateDatePicker().getValue());
             venteDAO.add(vente);
+            for(LineCommande l: ajouterVente.getListeLinesCommandeTableView().getItems()){
+                lineCommandeDAO.add(l);
+            }
+            ajouterVente.getListeLinesCommandeTableView().getItems().clear();
             nouveauVente();
         }else{
             selectionneClientAlert();
@@ -178,4 +186,8 @@ public class AjouterVenteHandler {
         boiteDialog.showAndWait();
     }
     
+    public void setClickedLineCommandeToProduitLabel(LineCommande line){
+        ajouterVente.getListeLinesCommandeTableView().getItems().remove(line);
+        setSelectedProduitToLabels(line.getProduit());
+    }
 }

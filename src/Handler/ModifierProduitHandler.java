@@ -57,7 +57,6 @@ public class ModifierProduitHandler {
                 Integer.valueOf(modifierProduit.getQteTextField().getText()),
                 modifierProduit.getDateDatePicker().getValue());
             
-            //System.out.println(p.getId());
             produitDAO.update(p, this.p.getId());
             modifierProduit.getWindow().close();
             Alert boiteDialog = new Alert(AlertType.INFORMATION);

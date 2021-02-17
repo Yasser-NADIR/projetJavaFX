@@ -6,10 +6,12 @@
 package DAO;
 
 import Entities.Client;
+import Entities.LineCommande;
 import Entities.Vente;
 import java.sql.PreparedStatement;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +20,10 @@ public class VenteDAOImpl extends AbstractDAO implements IVenteDAO {
 
     IClientDAO clientDAO = new ClientDAOImpl();
     
+    
     @Override
     public Vente getOne(long id) {
+        
         Vente vente = null;
         PreparedStatement pst;
         ResultSet rs;
@@ -88,11 +92,15 @@ public class VenteDAOImpl extends AbstractDAO implements IVenteDAO {
     public void add(Vente obj) {
         PreparedStatement pst;
         String query = "INSERT INTO vente(client, date) VALUES (?, ?)";
+        ResultSet rs;
         try{
-            pst = connection.prepareStatement(query);
+            pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pst.setLong(1, obj.getClient().getId());
             pst.setDate(2, Date.valueOf(obj.getDate()));
             pst.executeUpdate();
+            rs = pst.getGeneratedKeys();
+            if(rs.next())
+            obj.setId(rs.getLong(1));
         }catch(Exception ex){
             System.out.println(ex.getMessage());
         }
@@ -124,5 +132,10 @@ public class VenteDAOImpl extends AbstractDAO implements IVenteDAO {
         }catch(Exception ex){
             System.out.println(ex.getMessage());
         }
+    }
+    
+    public void setLineCommandeToVente(Vente vente){
+        ILineCommandeDAO lineCommandeDAO = new LineCommandeDAOImpl();
+        vente.setListLineCommande(lineCommandeDAO.getLineCommandeByVenteId(vente.getId()));
     }
 }

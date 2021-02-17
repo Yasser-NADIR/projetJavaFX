@@ -35,12 +35,12 @@ public class Program extends Application{
     MenuItem rechercherClientMenuItem = new MenuItem("rechercher");
     MenuItem listerClientMenuItem = new MenuItem("lister");
     MenuItem ajouterVenteMenuItem = new MenuItem("ajouter");
-    
-    
+    MenuItem rechercherVenteMenuItem = new MenuItem("rechercher");
     
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) {
         launch();
     }
@@ -55,7 +55,7 @@ public class Program extends Application{
         menuBar.getMenus().addAll(produitMenu, clientMenu, venteMenu);
         produitMenu.getItems().addAll(ajouterProduitMenuItem, rechercherProduitMenuItem, listerProduitMenuItem);
         clientMenu.getItems().addAll(ajouterClientMenuItem, rechercherClientMenuItem, listerClientMenuItem);
-        venteMenu.getItems().addAll(ajouterVenteMenuItem);
+        venteMenu.getItems().addAll(ajouterVenteMenuItem, rechercherVenteMenuItem);
     }
     
     private void eventHandler(){
@@ -79,6 +79,12 @@ public class Program extends Application{
         });
         ajouterVenteMenuItem.setOnAction(event->{
            new AjouterVenteWindow(); 
+        });
+        rechercherVenteMenuItem.setOnAction(event->{
+           ListerClientWindow listerClient = ListerClientWindow.selectionListeClient((client)->{
+               new ListerVenteByClientWindow(client);
+                return null;
+            });
         });
     }
     

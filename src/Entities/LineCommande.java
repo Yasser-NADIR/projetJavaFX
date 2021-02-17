@@ -18,6 +18,7 @@ public class LineCommande {
     private long qte;
     private LocalDate date;
     private Vente vente;
+    private final double TAXE = 1.2;
     
     
     public LineCommande(Produit produit, double prixVente, long qte, Vente vente, LocalDate date) {
@@ -86,7 +87,7 @@ public class LineCommande {
     }
 
     public double getTotal(){
-        return qte*prixVente;
+        return qte*prixVente*TAXE;
     }
     
     @Override

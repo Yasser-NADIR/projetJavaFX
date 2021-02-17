@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Vente {
     private long id;
-    private List<LineCommande> listLineCommande = new ArrayList<>();
+    private List<LineCommande> listLineCommande;
     private Client client;
     private LocalDate date;
 
@@ -72,6 +72,14 @@ public class Vente {
             d += l+"\n";
         }
         return  d+", date=" + date + '}';
+    }
+    
+    public double getTotal(){
+        double total = 0;
+        for(LineCommande line: listLineCommande){
+            total += line.getTotal();
+        }
+        return total;
     }
     
 }
